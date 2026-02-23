@@ -4,7 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CostGuard – Deine Abos im Blick</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+    const supabase = createClient(
+      : https://jmqusqvdvfjviiqvkoyk.supabase.co ,
+       sb_publishable_0G8ra5LIb1HJM7Ja3isQOw_TMk1jVYi
+    );
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("waitlistForm");
+      const message = document.getElementById("message");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("email").value;
+
+        const { error } = await supabase
+          .from("waitlist")
+          .insert([{ email }]);
+
+        if (error) {
+          message.innerText = "Fehler beim Speichern.";
+        } else {
+          message.innerText = "Danke! Du bist auf der Warteliste.";
+          form.reset();
+        }
+      });
+    });
+  </script>
+
   <style>
     body {
       margin: 0;
@@ -45,32 +76,5 @@
     </form>
     <p id="message"></p>
   </section>
-
-  <script>
-    const supabase = supabase.createClient(
-      https://jmqusqvdvfjviiqvkoyk.supabase.co ,
-      sb_publishable_0G8ra5LIb1HJM7Ja3isQOw_TMk1jVYi
-    );
-
-    const form = document.getElementById("waitlistForm");
-    const message = document.getElementById("message");
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const email = document.getElementById("email").value;
-
-      const { error } = await supabase
-        .from("waitlist")
-        .insert([{ email }]);
-
-      if (error) {
-        message.innerText = "Fehler beim Speichern.";
-      } else {
-        message.innerText = "Danke! Du bist auf der Warteliste.";
-        form.reset();
-      }
-    });
-  </script>
 </body>
 </html>
